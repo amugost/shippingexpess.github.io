@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Produk</title>
+    <link rel="stylesheet" href="https://shippingexpess.github.io/main.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .product-item {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex: 1 1 calc(25% - 20px); /* 4 items per row */
+            text-align: center;
+        }
+        .product-item img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        .product-item h2 {
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0;
+        }
+        .product-item p {
+            margin: 5px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Daftar Produk</h1>
+    <div id="productList" class="product-list"></div>
+    <div id="pagination"></div>
+
+    <script>
+        const apiKey = 'AIzaSyAAge_R1znmr5NDQ-H3yNPy9YQ9-xCmhCg';
+        const sheetId = '1lMw7UMYHfPQxO9ZsFC6zGg2T5o9v38hEEJIXtBnaIL8';
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A2:H?key=${apiKey}`;
+        const productsPerPage = 14;
+        let currentPage = 1;
+
+        function renderProducts(products) {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = '';
+
+            products.forEach(product => {
+                const productHTML = `
+                    <div class="product-item">
+                        <img src="${product[1]}" alt="${product[2]}"/>
+                        <h2>${product[2]}</h2>
+                        <p>Original Price: USD ${product[3]}</p>
+                        <p>Discount Price: <span class="discount">USD ${product[4]}</span></p>
+                        <p>Diskon: ${product[5]}%</p>
+                        <a class="btn" href="product.html?productId=${product[0]}">Lihat Detail</a>
+                    </div>
+                `;
+                productList.innerHTML += productHTML;
+            });
+        }
+
+        function renderPagination(totalProducts) {
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(totalProducts / productsPerPage);
+            let paginationHTML = '';
+
+            if (currentPage > 1) {
+                paginationHTML += `<button onclick="changePage(${currentPage - 1})">Prev</button>`;
+            }
+
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<strong>${i}</strong>`;
+                } else {
+                    paginationHTML += `<button onclick="changePage(${i})">${i}</button>`;
+                }
+            }
+
+            if (currentPage < totalPages) {
+                paginationHTML += `<button onclick="changePage(${currentPage + 1})">Next</button>`;
+            }
+
+            pagination.innerHTML = paginationHTML;
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const products = data.values;
+                    const startIndex = (currentPage - 1) * productsPerPage;
+                    const endIndex = startIndex + productsPerPage;
+                    const productsToDisplay = products.slice(startIndex, endIndex);
+
+                    renderProducts(productsToDisplay);
+                    renderPagination(products.length);
+                });
+        }
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const products = data.values;
+                renderProducts(products.slice(0, productsPerPage));
+                renderPagination(products.length);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    </script>
+</body>
+</html>
