@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Detail</title>
   
-  <!-- Open Graph Metadata -->
   <meta property="og:type" content="product" />
   <meta property="og:url" content="" />
   <meta property="og:title" content="" />
@@ -14,36 +13,14 @@
   <meta property="og:image:alt" content="Product Image" />
   <meta property="og:site_name" content="FAMSF Store" />
 
-  <!-- Schema.org Product Metadata -->
-  <div itemscope itemtype="http://schema.org/Product">
-    <meta itemprop="name" content="" />
-    <meta itemprop="url" content="" />
-    <meta itemprop="image" content="" />
-    <meta itemprop="image" content="" />
-    <span itemprop="description"></span>
-
-    <div itemprop="color" itemscope itemtype="http://schema.org/ProductColor">
-      <span itemprop="name"></span>
-      <meta itemprop="map" content="" />
-      <meta itemprop="image" content="" />
-    </div>
-
-    <div itemprop="color" itemscope itemtype="http://schema.org/ProductColor">
-      <span itemprop="name"></span>
-      <meta itemprop="map" content="" />
-      <meta itemprop="image" content="" />
-    </div>
-
-    <a itemprop="relatedItem" href=""></a>
-    <a itemprop="relatedItem" href=""></a>
-    <a itemprop="relatedItem" href=""></a>
-
-    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-      <span itemprop="price"></span>
-      <meta itemprop="priceCurrency" content="USD" />
-      <meta itemprop="availability" itemtype="http://schema.org/ItemAvailability" content="http://schema.org/InStock" />
-    </div>
-  </div>
+  <style>
+    .product-image img {
+      width: 300px; /* Ukuran sesuai kebutuhan */
+      height: auto;
+      background: url('https://via.placeholder.com/300') no-repeat center center;
+      background-size: contain;
+    }
+  </style>
 </head>
 <body>
   <div id="productContainer" style="display: none;">
@@ -65,59 +42,38 @@
   <div id="loadingMessage">Loading...</div>
 
   <script>
-    // Mengambil productId dari URL
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('productId');
 
     if (!productId) {
       document.getElementById('errorMessage').textContent = "No product ID found!";
     } else {
-      // Tampilkan pesan loading
       document.getElementById('loadingMessage').style.display = 'block';
 
-      // Ganti URL berikut dengan URL dari Google Apps Script API kamu
       const apiUrl = `https://script.google.com/macros/s/AKfycbz5Zox19ANP2kxZ4vx7yU8TyiJDzMV0OqX150GtRiIAA5P3E5Rqg2lrFeECBfTWtfwe/exec?productId=${productId}`;
 
-      // Fetch data produk berdasarkan productId
       fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-          document.getElementById('loadingMessage').style.display = 'none'; // Sembunyikan pesan loading
-          
+          document.getElementById('loadingMessage').style.display = 'none';
+
           if (data.error) {
             document.getElementById('errorMessage').textContent = data.error;
           } else {
-            // Update HTML dengan data produk
             const imageUrl = data['Image Url'];
-            const productName = data['Product Desc'];
-            const productDesc = data['Product Desc'];
-            const originalPrice = `${data.Currency} ${data['Origin Price']}`;
-            const discountPrice = `${data.Currency} ${data['Discount Price']}`;
-            const promotionUrl = data['Promotion Url'];
+            console.log('Image URL:', imageUrl); // Debugging
+            document.getElementById('productImage').src = imageUrl || "https://via.placeholder.com/300";
+            document.getElementById('productName').textContent = data['Product Desc'];
+            document.getElementById('productDesc').textContent = data['Product Desc'];
+            document.getElementById('originalPrice').textContent = `${data.Currency} ${data['Origin Price']}`;
+            document.getElementById('discountPrice').textContent = `${data.Currency} ${data['Discount Price']}`;
+            document.getElementById('promotionLink').href = data['Promotion Url'];
 
-            document.getElementById('productImage').src = imageUrl || "https://via.placeholder.com/300"; // Placeholder jika tidak ada URL gambar
-            document.getElementById('productName').textContent = productName;
-            document.getElementById('productDesc').textContent = productDesc;
-            document.getElementById('originalPrice').textContent = originalPrice;
-            document.getElementById('discountPrice').textContent = discountPrice;
-            document.getElementById('promotionLink').href = promotionUrl;
-
-            // Update Open Graph dan Schema.org tags
-            document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
-            document.querySelector('meta[property="og:title"]').setAttribute("content", productName);
-            document.querySelector('meta[property="og:description"]').setAttribute("content", productDesc);
-            document.querySelector('meta[property="og:image"]').setAttribute("content", imageUrl || "https://via.placeholder.com/300");
-            document.querySelector('[itemprop="name"]').setAttribute("content", productName);
-            document.querySelector('[itemprop="url"]').setAttribute("content", promotionUrl);
-            document.querySelector('[itemprop="image"]').setAttribute("content", imageUrl || "https://via.placeholder.com/300");
-            document.querySelector('[itemprop="description"]').textContent = productDesc;
-
-            // Tampilkan konten produk
             document.getElementById('productContainer').style.display = 'block';
           }
         })
         .catch(error => {
-          document.getElementById('loadingMessage').style.display = 'none'; // Sembunyikan pesan loading
+          document.getElementById('loadingMessage').style.display = 'none';
           document.getElementById('errorMessage').textContent = "Error fetching product data!";
           console.error('Error:', error);
         });
