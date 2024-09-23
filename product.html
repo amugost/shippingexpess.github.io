@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Detail</title>
+  <meta property="og:type" content="product">
+  <meta property="og:url" content="">
+  <meta property="og:title" content="Product Name">
+  <meta property="og:description" content="Product Description">
+  <meta property="og:image" content="">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -87,12 +95,26 @@
           if (data.error) {
             document.getElementById('errorMessage').textContent = data.error;
           } else {
-            document.getElementById('productImage').src = data['Image Url'];
-            document.getElementById('productName').textContent = data['Product Desc'];
-            document.getElementById('productDesc').textContent = data['Product Desc'];
-            document.getElementById('originalPrice').textContent = `${data.Currency} ${data['Origin Price']}`;
-            document.getElementById('discountPrice').textContent = `${data.Currency} ${data['Discount Price']}`;
-            document.getElementById('promotionLink').href = data['Promotion Url'];
+            const imageUrl = data['Image Url'];
+            const productName = data['Product Desc'];
+            const productDesc = data['Product Desc'];
+            const originalPrice = `${data.Currency} ${data['Origin Price']}`;
+            const discountPrice = `${data.Currency} ${data['Discount Price']}`;
+            const promotionUrl = data['Promotion Url'];
+
+            // Mengisi halaman dengan data produk
+            document.getElementById('productImage').src = imageUrl;
+            document.getElementById('productName').textContent = productName;
+            document.getElementById('productDesc').textContent = productDesc;
+            document.getElementById('originalPrice').textContent = originalPrice;
+            document.getElementById('discountPrice').textContent = discountPrice;
+            document.getElementById('promotionLink').href = promotionUrl;
+
+            // Update Open Graph tags
+            document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
+            document.querySelector('meta[property="og:title"]').setAttribute("content", productName);
+            document.querySelector('meta[property="og:description"]').setAttribute("content", productDesc);
+            document.querySelector('meta[property="og:image"]').setAttribute("content", imageUrl);
           }
         })
         .catch(error => {
