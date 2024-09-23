@@ -3,65 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="product-title">Detail Produk</title>
-    <link rel="stylesheet" href="https://raw.githubusercontent.com/amugost/github-style/main/main.css">
+    <title>Product List</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Ganti dengan file CSS Anda -->
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
         }
-        .product-container {
-            max-width: 600px;
-            margin: auto;
-            text-align: center;
+        #product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
         }
-        img {
+        .product {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            width: calc(33.33% - 20px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .product img {
             max-width: 100%;
             height: auto;
+            border-radius: 8px;
         }
-        .price {
-            font-size: 20px;
-            color: green;
+        .product:hover {
+            transform: translateY(-5px);
         }
-        .discount {
-            font-size: 16px;
-            color: red;
+        h2 {
+            font-size: 1.2em;
+            color: #333;
+        }
+        p {
+            color: #555;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #e91e63;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="product-container">
-        <h1 id="product-title">Loading...</h1>
-        <img id="product-image" src="" alt="Product Image">
-        <p id="product-description"></p>
-        <p class="price" id="product-original-price"></p>
-        <p class="price" id="product-discount-price"></p>
-        <p class="discount" id="product-discount"></p>
-        <a id="product-link" href="#" target="_blank">View Product</a>
-    </div>
+    <h1>Product List</h1>
+    <div id="product-list"></div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('productId');
-
-        fetch(`https://script.google.com/macros/s/AKfycbyzJyMWf-1pQEb-trhN0afyFCIaCQyggkksqW4KK9TSkvKIpY5k-_tELJwdMZAesnw4Kg/exec?productId=${productId}`)
+        fetch('https://script.google.com/macros/s/AKfycbyzJyMWf-1pQEb-trhN0afyFCIaCQyggkksqW4KK9TSkvKIpY5k-_tELJwdMZAesnw4Kg/exec') // Ganti dengan URL deployment Anda
             .then(response => response.json())
             .then(data => {
-                if (data.error) {
-                    document.getElementById('product-title').innerText = 'Produk tidak ditemukan.';
-                } else {
-                    document.getElementById('product-title').innerText = data.judul;
-                    document.getElementById('product-image').src = data.gambar;
-                    document.getElementById('product-description').innerText = data.desc;
-                    document.getElementById('product-original-price').innerText = `Original Price: ${data['original price']}`;
-                    document.getElementById('product-discount-price').innerText = `Discount Price: ${data['discoun price']}`;
-                    document.getElementById('product-discount').innerText = `Discount: ${data.discount}`;
-                    document.getElementById('product-link').href = data['link out'];
-                }
+                const productList = document.getElementById('product-list');
+                data.forEach(product => {
+                    const productDiv = document.createElement('div');
+                    productDiv.classList.add('product');
+                    productDiv.innerHTML = `
+                        <h2>${product.judul}</h2>
+                        <img src="${product.gambar}" alt="${product.judul}">
+                        <p>Original Price: <s>${product.original_price}</s></p>
+                        <p>Discount Price: <strong>${product.discount_price}</strong></p>
+                        <p>Discount: ${product.discount * 100}%</p>
+                        <a href="${product.link_out}" target="_blank">View Product</a>
+                    `;
+                    productList.appendChild(productDiv);
+                });
             })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                document.getElementById('product-title').innerText = 'Produk tidak ditemukan.';
-            });
+            .catch(error => console.error('Error fetching data:', error));
     </script>
 </body>
 </html>
