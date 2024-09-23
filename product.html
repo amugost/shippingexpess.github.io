@@ -79,6 +79,9 @@
                     document.getElementById('discount').innerText = `Discount: ${Math.round(product.discount * 100)}%`;
                     document.getElementById('product-description').innerText = product.desc;
                     document.getElementById('link-out').href = product.link_out;
+
+                    // Mengubah title halaman
+                    document.title = product.judul; 
                 } else {
                     console.error('Product not found');
                 }
