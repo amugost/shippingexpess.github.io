@@ -46,7 +46,7 @@
   </div>
 </head>
 <body>
-  <div id="productContainer">
+  <div id="productContainer" style="display: none;">
     <div class="product-image">
       <img id="productImage" src="" alt="Product Image" />
     </div>
@@ -62,6 +62,7 @@
   </div>
 
   <p id="errorMessage" class="error-message"></p>
+  <div id="loadingMessage">Loading...</div>
 
   <script>
     // Mengambil productId dari URL
@@ -71,6 +72,9 @@
     if (!productId) {
       document.getElementById('errorMessage').textContent = "No product ID found!";
     } else {
+      // Tampilkan pesan loading
+      document.getElementById('loadingMessage').style.display = 'block';
+
       // Ganti URL berikut dengan URL dari Google Apps Script API kamu
       const apiUrl = `https://script.google.com/macros/s/AKfycbz5Zox19ANP2kxZ4vx7yU8TyiJDzMV0OqX150GtRiIAA5P3E5Rqg2lrFeECBfTWtfwe/exec?productId=${productId}`;
 
@@ -78,6 +82,8 @@
       fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
+          document.getElementById('loadingMessage').style.display = 'none'; // Sembunyikan pesan loading
+          
           if (data.error) {
             document.getElementById('errorMessage').textContent = data.error;
           } else {
@@ -105,10 +111,13 @@
             document.querySelector('[itemprop="url"]').setAttribute("content", promotionUrl);
             document.querySelector('[itemprop="image"]').setAttribute("content", imageUrl);
             document.querySelector('[itemprop="description"]').textContent = productDesc;
-            // Set color, price, etc. dynamically if applicable
+
+            // Tampilkan konten produk
+            document.getElementById('productContainer').style.display = 'block';
           }
         })
         .catch(error => {
+          document.getElementById('loadingMessage').style.display = 'none'; // Sembunyikan pesan loading
           document.getElementById('errorMessage').textContent = "Error fetching product data!";
           console.error('Error:', error);
         });
