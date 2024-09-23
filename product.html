@@ -48,7 +48,7 @@
 <body>
   <div id="productContainer" style="display: none;">
     <div class="product-image">
-      <img id="productImage" src="" alt="Product Image" />
+      <img id="productImage" src="https://via.placeholder.com/300" alt="Product Image" />
     </div>
     <div class="product-info">
       <h1 id="productName">Product Name</h1>
@@ -95,7 +95,7 @@
             const discountPrice = `${data.Currency} ${data['Discount Price']}`;
             const promotionUrl = data['Promotion Url'];
 
-            document.getElementById('productImage').src = imageUrl;
+            document.getElementById('productImage').src = imageUrl || "https://via.placeholder.com/300"; // Placeholder jika tidak ada URL gambar
             document.getElementById('productName').textContent = productName;
             document.getElementById('productDesc').textContent = productDesc;
             document.getElementById('originalPrice').textContent = originalPrice;
@@ -106,10 +106,10 @@
             document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
             document.querySelector('meta[property="og:title"]').setAttribute("content", productName);
             document.querySelector('meta[property="og:description"]').setAttribute("content", productDesc);
-            document.querySelector('meta[property="og:image"]').setAttribute("content", imageUrl);
+            document.querySelector('meta[property="og:image"]').setAttribute("content", imageUrl || "https://via.placeholder.com/300");
             document.querySelector('[itemprop="name"]').setAttribute("content", productName);
             document.querySelector('[itemprop="url"]').setAttribute("content", promotionUrl);
-            document.querySelector('[itemprop="image"]').setAttribute("content", imageUrl);
+            document.querySelector('[itemprop="image"]').setAttribute("content", imageUrl || "https://via.placeholder.com/300");
             document.querySelector('[itemprop="description"]').textContent = productDesc;
 
             // Tampilkan konten produk
