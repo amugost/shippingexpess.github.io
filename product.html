@@ -1,93 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details</title>
-    <style>
-        /* Styling untuk tampilan yang lebih menarik */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            margin: 20px;
-        }
-        .product-container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        img {
-            max-width: 100%;
-            border-radius: 8px;
-        }
-        h1 {
-            font-size: 24px;
-            color: #333;
-        }
-        .price {
-            font-size: 20px;
-            color: green;
-        }
-        .discount {
-            color: red;
-            font-weight: bold;
-        }
-        .description {
-            margin: 10px 0;
-        }
-        a {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        a:hover {
-            background-color: #218838;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    img {
+      width: 100px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Product List</h1>
+    <table id="productTable">
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Image</th>
+          <th>Description</th>
+          <th>Original Price</th>
+          <th>Discounted Price</th>
+          <th>Discount</th>
+          <th>Promotion</th>
+          <th>Category</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-    <div class="product-container">
-        <h1 id="product-title"></h1>
-        <img id="product-image" alt="Product Image">
-        <p class="price" id="original-price"></p>
-        <p class="discount" id="discount-price"></p>
-        <p id="discount"></p>
-        <p class="description" id="product-description"></p>
-        <a id="link-out" href="#" target="_blank">See Details</a>
-    </div>
+  <script>
+    // Ganti URL berikut dengan URL dari Google Apps Script API kamu
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbxaxgV3LPmzpMRfWnkrpyL9Xr3kKXDQBRpxfBpfi8ka_CKpX8vuYUlJ9y5Mp2FvYwfK/exec';
 
-    <script>
-        const productId = new URLSearchParams(window.location.search).get('productId');
-        const apiUrl = `https://script.google.com/macros/s/AKfycbxaxgV3LPmzpMRfWnkrpyL9Xr3kKXDQBRpxfBpfi8ka_CKpX8vuYUlJ9y5Mp2FvYwfK/exec?productId=${productId}`;
-
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                const product = data.find(item => item.id === productId); // Temukan produk berdasarkan ID
-                if (product) {
-                    document.getElementById('product-title').innerText = product.judul;
-                    document.getElementById('product-image').src = product.gambar;
-                    document.getElementById('original-price').innerText = `Original Price: ${product.original_price}`;
-                    document.getElementById('discount-price').innerText = `Discount Price: ${product.discount_price}`;
-                    document.getElementById('discount').innerText = `Discount: ${Math.round(product.discount * 100)}%`;
-                    document.getElementById('product-description').innerText = product.desc;
-                    document.getElementById('link-out').href = product.link_out;
-
-                    // Mengubah title halaman
-                    document.title = product.judul; 
-                } else {
-                    console.error('Product not found');
-                }
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    </script>
-
+    // Mengambil data dari API Google Apps Script
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        const productTable = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+        
+        // Memasukkan setiap produk ke tabel
+        data.forEach(product => {
+          let row = productTable.insertRow();
+          
+          // Menambahkan kolom untuk setiap produk
+          row.insertCell(0).innerText = product.ProductId;
+          row.insertCell(1).innerHTML = `<img src="${product['Image Url']}" alt="Product Image">`;
+          row.insertCell(2).innerText = product['Product Desc'];
+          row.insertCell(3).innerText = `${product.Currency} ${product['Origin Price']}`;
+          row.insertCell(4).innerText = `${product.Currency} ${product['Discount Price']}`;
+          row.insertCell(5).innerText = `${product.Discount}%`;
+          row.insertCell(6).innerHTML = `<a href="${product['Promotion Url']}" target="_blank">Buy Now</a>`;
+          row.insertCell(7).innerText = product.Category;
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  </script>
 </body>
 </html>
