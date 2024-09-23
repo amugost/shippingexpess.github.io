@@ -3,79 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product List</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Ganti dengan file CSS Anda -->
+    <title>Product Details</title>
     <style>
+        /* Tambahkan CSS untuk styling */
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #f8f8f8;
-            margin: 0;
-            padding: 20px;
+            margin: 20px;
         }
-        #product-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .product {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            width: calc(33.33% - 20px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-        .product img {
+        img {
             max-width: 100%;
             height: auto;
-            border-radius: 8px;
         }
-        .product:hover {
-            transform: translateY(-5px);
+        .product-info {
+            margin-top: 20px;
         }
-        h2 {
-            font-size: 1.2em;
-            color: #333;
-        }
-        p {
-            color: #555;
-        }
-        a {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 15px;
-            background-color: #e91e63;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
+        .discount {
+            color: red;
         }
     </style>
 </head>
 <body>
-    <h1>Product List</h1>
-    <div id="product-list"></div>
+
+    <h1>Product Details</h1>
+    <div class="product-info">
+        <img id="product-image" alt="Product Image">
+        <h2 id="product-title"></h2>
+        <p id="original-price"></p>
+        <p id="discount-price"></p>
+        <p class="discount" id="discount"></p>
+        <p id="product-description"></p>
+        <a id="link-out" href="#" target="_blank">See Details</a>
+    </div>
 
     <script>
-        fetch('https://script.google.com/macros/s/AKfycbyzJyMWf-1pQEb-trhN0afyFCIaCQyggkksqW4KK9TSkvKIpY5k-_tELJwdMZAesnw4Kg/exec') // Ganti dengan URL deployment Anda
+        const productId = new URLSearchParams(window.location.search).get('productId');
+        const apiUrl = `https://script.google.com/macros/s/AKfycbyzJyMWf-1pQEb-trhN0afyFCIaCQyggkksqW4KK9TSkvKIpY5k-_tELJwdMZAesnw4Kg/exec?productId=${productId}`;
+
+        fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
-                const productList = document.getElementById('product-list');
-                data.forEach(product => {
-                    const productDiv = document.createElement('div');
-                    productDiv.classList.add('product');
-                    productDiv.innerHTML = `
-                        <h2>${product.judul}</h2>
-                        <img src="${product.gambar}" alt="${product.judul}">
-                        <p>Original Price: <s>${product.original_price}</s></p>
-                        <p>Discount Price: <strong>${product.discount_price}</strong></p>
-                        <p>Discount: ${product.discount * 100}%</p>
-                        <a href="${product.link_out}" target="_blank">View Product</a>
-                    `;
-                    productList.appendChild(productDiv);
-                });
+                // Misalkan kita ingin menampilkan produk pertama
+                const product = data[0]; // Ambil produk pertama
+                if (product) {
+                    document.getElementById('product-image').src = product.gambar;
+                    document.getElementById('product-title').innerText = product.judul;
+                    document.getElementById('original-price').innerText = `Original Price: ${product.original_price}`;
+                    document.getElementById('discount-price').innerText = `Discount Price: ${product.discount_price}`;
+                    document.getElementById('discount').innerText = `Discount: ${Math.round(product.discount * 100)}%`;
+                    document.getElementById('product-description').innerText = product.desc;
+                    document.getElementById('link-out').href = product.link_out;
+                } else {
+                    console.error('Product not found');
+                }
             })
             .catch(error => console.error('Error fetching data:', error));
     </script>
+
 </body>
 </html>
