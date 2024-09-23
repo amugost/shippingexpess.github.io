@@ -43,7 +43,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('productId');
 
-        fetch(`https://script.google.com/macros/s/AKfycbwVh4LthLlW0_9BcdHLlEnJGbs8w6fq76rUtan-kn-48RYEloke5scvmTTgdsw00gMSFw/exec?productId=${productId}`)
+        fetch(`https://script.google.com/macros/s/AKfycbxkBNE27IBMtnUxI1bOX8oFgiQpIvj-dBL3MI3ghGQm0fy7PsQiWb7rkRL8OIJHLYeF9A/exec?productId=${productId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
