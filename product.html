@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Produk</title>
-    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="https://raw.githubusercontent.com/amugost/github-style/main/main.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,6 +68,7 @@
 
         function renderProduct(product) {
             const productDetail = document.getElementById('productDetail');
+            document.title = `Detail Produk - ${product[2]}`; // Mengubah judul halaman
             productDetail.innerHTML = `
                 <img src="${product[1]}" alt="${product[2]}"/>
                 <div class="product-info">
