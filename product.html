@@ -4,65 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Detail</title>
-  <meta property="og:type" content="product">
-  <meta property="og:url" content="">
-  <meta property="og:title" content="Product Name">
-  <meta property="og:description" content="Product Description">
-  <meta property="og:image" content="">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    .product-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 800px;
-      margin: 0 auto;
-      border: 1px solid #ccc;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .product-image img {
-      max-width: 300px;
-    }
-    .product-info {
-      text-align: center;
-    }
-    .product-info h1 {
-      font-size: 24px;
-      margin: 10px 0;
-    }
-    .price {
-      font-size: 20px;
-      color: #e74c3c;
-      margin: 10px 0;
-    }
-    .discount-price {
-      text-decoration: line-through;
-      color: #7f8c8d;
-    }
-    .buy-button {
-      padding: 10px 20px;
-      background-color: #2ecc71;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-    .error-message {
-      color: red;
-      text-align: center;
-    }
-  </style>
+  
+  <!-- Open Graph Metadata -->
+  <meta property="og:type" content="product" />
+  <meta property="og:url" content="" />
+  <meta property="og:title" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content="" />
+  <meta property="og:image:alt" content="Product Image" />
+  <meta property="og:site_name" content="FAMSF Store" />
+
+  <!-- Schema.org Product Metadata -->
+  <div itemscope itemtype="http://schema.org/Product">
+    <meta itemprop="name" content="" />
+    <meta itemprop="url" content="" />
+    <meta itemprop="image" content="" />
+    <meta itemprop="image" content="" />
+    <span itemprop="description"></span>
+
+    <div itemprop="color" itemscope itemtype="http://schema.org/ProductColor">
+      <span itemprop="name"></span>
+      <meta itemprop="map" content="" />
+      <meta itemprop="image" content="" />
+    </div>
+
+    <div itemprop="color" itemscope itemtype="http://schema.org/ProductColor">
+      <span itemprop="name"></span>
+      <meta itemprop="map" content="" />
+      <meta itemprop="image" content="" />
+    </div>
+
+    <a itemprop="relatedItem" href=""></a>
+    <a itemprop="relatedItem" href=""></a>
+    <a itemprop="relatedItem" href=""></a>
+
+    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+      <span itemprop="price"></span>
+      <meta itemprop="priceCurrency" content="USD" />
+      <meta itemprop="availability" itemtype="http://schema.org/ItemAvailability" content="http://schema.org/InStock" />
+    </div>
+  </div>
 </head>
 <body>
-  <div class="product-container" id="productContainer">
+  <div id="productContainer">
     <div class="product-image">
-      <img id="productImage" src="" alt="Product Image">
+      <img id="productImage" src="" alt="Product Image" />
     </div>
     <div class="product-info">
       <h1 id="productName">Product Name</h1>
@@ -81,7 +67,7 @@
     // Mengambil productId dari URL
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('productId');
-    
+
     if (!productId) {
       document.getElementById('errorMessage').textContent = "No product ID found!";
     } else {
@@ -95,6 +81,7 @@
           if (data.error) {
             document.getElementById('errorMessage').textContent = data.error;
           } else {
+            // Update HTML dengan data produk
             const imageUrl = data['Image Url'];
             const productName = data['Product Desc'];
             const productDesc = data['Product Desc'];
@@ -102,7 +89,6 @@
             const discountPrice = `${data.Currency} ${data['Discount Price']}`;
             const promotionUrl = data['Promotion Url'];
 
-            // Mengisi halaman dengan data produk
             document.getElementById('productImage').src = imageUrl;
             document.getElementById('productName').textContent = productName;
             document.getElementById('productDesc').textContent = productDesc;
@@ -110,11 +96,16 @@
             document.getElementById('discountPrice').textContent = discountPrice;
             document.getElementById('promotionLink').href = promotionUrl;
 
-            // Update Open Graph tags
+            // Update Open Graph dan Schema.org tags
             document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
             document.querySelector('meta[property="og:title"]').setAttribute("content", productName);
             document.querySelector('meta[property="og:description"]').setAttribute("content", productDesc);
             document.querySelector('meta[property="og:image"]').setAttribute("content", imageUrl);
+            document.querySelector('[itemprop="name"]').setAttribute("content", productName);
+            document.querySelector('[itemprop="url"]').setAttribute("content", promotionUrl);
+            document.querySelector('[itemprop="image"]').setAttribute("content", imageUrl);
+            document.querySelector('[itemprop="description"]').textContent = productDesc;
+            // Set color, price, etc. dynamically if applicable
           }
         })
         .catch(error => {
