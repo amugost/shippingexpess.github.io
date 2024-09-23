@@ -27,24 +27,24 @@
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('productId');
 
-        fetch(`ttps://script.google.com/macros/s/AKfycbykUiN7l0vLrLyzVEpU0d9migPqJcJM7GIf5F7uPUi90ebrkbSOqODzco3CORqIqRHr/exec?productId=${productId}`)
-            .then(response => response.json())
-            .then(data => {
-                const product = data[0]; // Ambil produk pertama dari array
-                document.getElementById('productName').textContent = product['Product Desc'];
-                document.getElementById('productImage').src = product['Image Url'];
-                document.getElementById('productDesc').textContent = product['Product Desc'];
-                document.getElementById('originalPrice').textContent = product['Origin Price'];
-                document.getElementById('discountPrice').textContent = product['Discount Price'];
-                document.getElementById('promotionLink').href = product['Promotion Url'];
-                
-                // Tampilkan kontainer produk
-                document.getElementById('productContainer').style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Error fetching product data:', error);
-                // Tampilkan pesan kesalahan atau sesuatu yang sesuai
-            });
+  fetch(`https://script.google.com/macros/s/AKfycbx93_uVDgokUn1r0zP1YCPpLhcmlXLa0bOWH0y3Y3QucnxheE_4qrANFyfyhbJ4nENx/exec?productId=${productId}`)
+    .then(response => response.json())
+    .then(data => {
+        console.log('Data fetched:', data); // Tambahkan log ini
+        const product = data[0];
+        document.getElementById('productName').textContent = product['Product Desc'];
+        document.getElementById('productImage').src = product['Image Url'];
+        document.getElementById('productDesc').textContent = product['Product Desc'];
+        document.getElementById('originalPrice').textContent = product['Origin Price'];
+        document.getElementById('discountPrice').textContent = product['Discount Price'];
+        document.getElementById('promotionLink').href = product['Promotion Url'];
+        
+        document.getElementById('productContainer').style.display = 'block';
+    })
+    .catch(error => {
+        console.error('Error fetching product data:', error);
+    });
+
     </script>
 </body>
 </html>
