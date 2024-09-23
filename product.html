@@ -3,101 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Produk</title>
-    <link rel="stylesheet" href="/main.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
-        }
-        .product-detail {
-            display: flex;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        .product-detail img {
-            max-width: 50%;
-            border-radius: 5px;
-        }
-        .product-info {
-            max-width: 50%;
-            padding-left: 20px;
-        }
-        .product-info h1 {
-            font-size: 24px;
-            color: #333;
-        }
-        .product-info p {
-            margin: 5px 0;
-        }
-        .discount {
-            color: red;
-            font-weight: bold;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: #218838;
-        }
-    </style>
+    <title>Produk</title>
+    <link rel="stylesheet" href="https://raw.githubusercontent.com/amugost/github-style/main/main.css">
 </head>
 <body>
     <h1>Detail Produk</h1>
-    <div id="productDetail" class="product-detail"></div>
+    <div id="product-container"></div>
 
     <script>
-        const apiKey = 'AIzaSyAAge_R1znmr5NDQ-H3yNPy9YQ9-xCmhCg';
-        const sheetId = '1lMw7UMYHfPQxO9ZsFC6zGg2T5o9v38hEEJIXtBnaIL8';
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A2:H?key=${apiKey}`;
-
-        function getProductId() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('productId');
-        }
-
-        function renderProduct(product) {
-            const productDetail = document.getElementById('productDetail');
-            document.title = `Detail Produk - ${product[2]}`; // Mengubah judul halaman
-            productDetail.innerHTML = `
-                <img src="${product[1]}" alt="${product[2]}"/>
-                <div class="product-info">
-                    <h1>${product[2]}</h1>
-                    <p>Original Price: USD ${product[3]}</p>
-                    <p>Discount Price: <span class="discount">USD ${product[4]}</span></p>
-                    <p>Diskon: ${product[5]}%</p>
-                    <p>${product[7]}</p> <!-- Deskripsi -->
-                    <a class="btn" href="${product[6]}">Beli Sekarang</a> <!-- Link keluar -->
-                </div>
-            `;
-        }
-
-        fetch(url)
-            .then(response => response.json())
+        // Ganti dengan URL Google Apps Script kamu
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzQ7sKN4E_T9nlEz3dB55Il0vKdNoeovjGU0qcWBtmdipRN6p8T8sVCho32M3Arn9yidg/exec';
+        
+        // Ambil ID produk dari parameter URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('productId');
+        
+        // Panggil API untuk mendapatkan data produk
+        fetch(`${apiUrl}?productId=${productId}`)
+            .then(response => response.text())
             .then(data => {
-                const products = data.values;
-                const productId = getProductId();
-                const product = products.find(p => p[0] === productId);
-
-                if (product) {
-                    renderProduct(product);
-                } else {
-                    document.getElementById('productDetail').innerHTML = '<p>Produk tidak ditemukan.</p>';
-                }
+                document.getElementById('product-container').innerHTML = data;
             })
             .catch(error => {
-                console.error('Error fetching data:', error);
-                document.getElementById('productDetail').innerHTML = '<p>Produk tidak ditemukan.</p>';
+                console.error('Error fetching product data:', error);
+                document.getElementById('product-container').innerHTML = "Produk tidak ditemukan.";
             });
     </script>
 </body>
