@@ -5,34 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details</title>
     <style>
-        /* Tambahkan CSS untuk styling */
+        /* Styling untuk tampilan yang lebih menarik */
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f8f8;
             margin: 20px;
         }
+        .product-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
         img {
             max-width: 100%;
-            height: auto;
+            border-radius: 8px;
         }
-        .product-info {
-            margin-top: 20px;
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        .price {
+            font-size: 20px;
+            color: green;
         }
         .discount {
             color: red;
+            font-weight: bold;
+        }
+        .description {
+            margin: 10px 0;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
 
-    <h1>Product Details</h1>
-    <div class="product-info">
+    <div class="product-container">
+        <h1 id="product-title"></h1>
         <img id="product-image" alt="Product Image">
-        <h2 id="product-title"></h2>
-        <p id="original-price"></p>
-        <p id="discount-price"></p>
-        <p class="discount" id="discount"></p>
-        <p id="product-description"></p>
+        <p class="price" id="original-price"></p>
+        <p class="discount" id="discount-price"></p>
+        <p id="discount"></p>
+        <p class="description" id="product-description"></p>
         <a id="link-out" href="#" target="_blank">See Details</a>
     </div>
 
@@ -43,11 +70,10 @@
         fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
-                // Misalkan kita ingin menampilkan produk pertama
-                const product = data[0]; // Ambil produk pertama
+                const product = data.find(item => item.id === productId); // Temukan produk berdasarkan ID
                 if (product) {
-                    document.getElementById('product-image').src = product.gambar;
                     document.getElementById('product-title').innerText = product.judul;
+                    document.getElementById('product-image').src = product.gambar;
                     document.getElementById('original-price').innerText = `Original Price: ${product.original_price}`;
                     document.getElementById('discount-price').innerText = `Discount Price: ${product.discount_price}`;
                     document.getElementById('discount').innerText = `Discount: ${Math.round(product.discount * 100)}%`;
