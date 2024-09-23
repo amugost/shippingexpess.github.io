@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="product-title">Product Details</title>
+</head>
+<body>
+    <div id="product-container">
+        <img id="product-image" src="" alt="">
+        <h1 id="product-name"></h1>
+        <p id="original-price"></p>
+        <p id="discount-price"></p>
+        <p id="discount"></p>
+        <p id="product-description"></p>
+        <a id="product-link" href="">View Product</a>
+    </div>
+
+    <script>
+        // Mengambil parameter productId dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('productId');
+
+        // Data produk (ini hanya contoh; Anda bisa ambil dari API atau file JSON)
+        const products = [
+            {
+                "id": "1005004091065619",
+                "gambar": "https://ae-pic-a1.aliexpress-media.com/kf/S5cc5c5830d5b4d78bf47dd72081920b2o.jpg",
+                "judul": "ZANZEA Summer Casual Short Sleeve Blouse Harem Pants Sets",
+                "original_price": "USD 29.49",
+                "discount_price": "USD 18.87",
+                "discount": 0.36,
+                "link_out": "https://s.click.aliexpress.com/e/_ooWoH3p",
+                "desc": "ZANZEA Summer Casual Short Sleeve Blouse Harem Pants Sets",
+                "category": "Women Pants"
+            }
+            // Tambahkan produk lainnya di sini
+        ];
+
+        // Mencari produk berdasarkan ID
+        const product = products.find(p => p.id === productId);
+
+        if (product) {
+            // Memperbarui konten halaman
+            document.getElementById('product-title').innerText = product.judul;
+            document.getElementById('product-image').src = product.gambar;
+            document.getElementById('product-name').innerText = product.judul;
+            document.getElementById('original-price').innerText = `Original Price: ${product.original_price}`;
+            document.getElementById('discount-price').innerText = `Discount Price: ${product.discount_price}`;
+            document.getElementById('discount').innerText = `Discount: ${Math.round(product.discount * 100)}%`;
+            document.getElementById('product-description').innerText = product.desc;
+            document.getElementById('product-link').href = product.link_out;
+        }
+    </script>
+</body>
+</html>
