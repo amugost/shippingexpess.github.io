@@ -21,7 +21,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('productId');
 
-        fetch(`https://script.google.com/macros/s/AKfycbxHCxh0RfVlsouItz7vvhKsu1XDhfrZWadDm5sMTQm5skoO2YA08sINCIXsw53Q5D1_/exec?productId=${productId}`)
+        fetch(`ttps://script.google.com/macros/s/AKfycbykUiN7l0vLrLyzVEpU0d9migPqJcJM7GIf5F7uPUi90ebrkbSOqODzco3CORqIqRHr/exec?productId=${productId}`)
             .then(response => response.json())
             .then(data => {
                 const product = data[0]; // Ambil produk pertama dari array
